@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to NoteCapture</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .onboarding-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .step {
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: 8px;
+      background: #f8f9fa;
+    }
+
+    .step img {
+      max-width: 300px;
+      margin: 20px 0;
+    }
+
+    .sync-options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .sync-option {
+      padding: 20px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .sync-option:hover {
+      border-color: #1a73e8;
+    }
+
+    .sync-option.selected {
+      border-color: #1a73e8;
+      background: #e8f0fe;
+    }
+  </style>
+</head>
+<body>
+  <div class="onboarding-container">
+    <h1>Welcome to NoteCapture!</h1>
+    <p>Let's get you set up in just a few steps.</p>
+
+    <div class="step">
+      <h2>Step 1: Choose Your Sync Destination</h2>
+      <p>Select where you'd like to save your captured notes:</p>
+      <div class="sync-options">
+        <div class="sync-option" data-option="docs">
+          <h3>Google Docs</h3>
+          <p>Save notes to a dedicated Google Doc</p>
+        </div>
+        <div class="sync-option" data-option="keep">
+          <h3>Google Keep</h3>
+          <p>Save notes as Keep notes</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <h2>Step 2: Sign in to Google</h2>
+      <p>Connect your Google account to enable syncing:</p>
+      <button id="signInButton">Sign in with Google</button>
+    </div>
+
+    <div class="step">
+      <h2>Step 3: Quick Tutorial</h2>
+      <div class="tutorial-steps">
+        <p>1. Highlight any text on a webpage</p>
+        <p>2. Right-click and select "Save to NoteCapture"</p>
+        <p>3. Your note will be saved automatically!</p>
+      </div>
+    </div>
+
+    <button id="finishButton" disabled>Finish Setup</button>
+  </div>
+  <script src="onboarding.js"></script>
+</body>
+</html>

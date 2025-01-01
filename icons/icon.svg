@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#1a73e8"/>
+  
+  <!-- Notepad shape -->
+  <rect x="34" y="24" width="60" height="80" rx="4" fill="white"/>
+  
+  <!-- Lines representing text -->
+  <rect x="44" y="40" width="40" height="4" rx="2" fill="#1a73e8"/>
+  <rect x="44" y="52" width="30" height="4" rx="2" fill="#1a73e8"/>
+  <rect x="44" y="64" width="35" height="4" rx="2" fill="#1a73e8"/>
+  
+  <!-- Highlight effect -->
+  <rect x="42" y="76" width="44" height="12" rx="2" fill="#fdd663" opacity="0.8"/>
+  <rect x="44" y="80" width="40" height="4" rx="2" fill="#1a73e8"/>
+</svg>
