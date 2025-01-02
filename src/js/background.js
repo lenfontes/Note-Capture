@@ -1,36 +1,62 @@
 import googleAPI from './google-api';
 
-// Create context menu item
+const CATEGORIES = ['Notes', 'Quote', 'Definition', 'Research', 'Reference'];
+
+// Create context menu items
 chrome.runtime.onInstalled.addListener(() => {
+  console.log('Creating context menu items');
+  
+  // Create parent menu
   chrome.contextMenus.create({
-    id: 'saveNote',
+    id: 'saveNoteParent',
     title: 'Save to NoteCapture',
     contexts: ['selection']
+  });
+
+  // Create category submenus
+  CATEGORIES.forEach(category => {
+    chrome.contextMenus.create({
+      id: `saveNote_${category}`,
+      parentId: 'saveNoteParent',
+      title: category,
+      contexts: ['selection']
+    });
   });
 });
 
 // Handle context menu clicks
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId === 'saveNote') {
+  console.log('Context menu clicked:', info.menuItemId);
+  if (info.menuItemId.startsWith('saveNote_')) {
     try {
+      console.log('Starting save process...');
+      
+      // Get category from menu item ID
+      const category = info.menuItemId.split('_')[1];
+      console.log('Selected category:', category);
+      
       // Authenticate if needed
+      console.log('Authenticating...');
       if (!await googleAPI.authenticate()) {
         throw new Error('Authentication failed');
       }
+      console.log('Authentication successful');
 
       // Get or create notes document
+      console.log('Getting/creating document...');
       let { notesDocId } = await chrome.storage.local.get('notesDocId');
+      console.log('Existing notesDocId:', notesDocId);
+      
       if (!notesDocId) {
+        console.log('Creating new document...');
         notesDocId = await googleAPI.createNotesDocument();
+        console.log('Created document with ID:', notesDocId);
       }
       googleAPI.notesDocId = notesDocId;
 
-      // Save the note
-      const text = info.selectionText;
-      const url = info.pageUrl;
-      const category = 'Uncategorized'; // Default category
+      await saveHighlightedText(info, tab, category);
 
-      await googleAPI.appendNote(text, url, category);
+      console.log('Note saved successfully');
       
       // Notify user
       chrome.action.setBadgeText({ text: '✓' });
@@ -47,3 +73,29 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     }
   }
 });
+
+async function saveHighlightedText(info, tab, category) {
+  try {
+    const { notes = [] } = await chrome.storage.local.get('notes');
+    const note = {
+      text: info.selectionText,
+      source: tab.url,
+      sourceText: tab.url ? new URL(tab.url).hostname : 'Unknown',
+      category,
+      timestamp: new Date().toISOString()
+    };
+    
+    // Save to Google Docs
+    const { notesDocId } = await chrome.storage.local.get('notesDocId');
+    if (notesDocId) {
+      await googleAPI.appendToDoc(note);  // Pass the note object directly
+    }
+
+    // Save locally
+    notes.unshift(note);
+    await chrome.storage.local.set({ notes });
+  } catch (error) {
+    console.error('Error saving note:', error);
+    throw error;  // Re-throw to handle in parent
+  }
+}

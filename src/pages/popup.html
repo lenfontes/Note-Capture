@@ -6,27 +6,82 @@
 </head>
 <body>
   <div class="container">
-    <h2>NoteCapture</h2>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="notes">Notes</button>
-      <button class="tab-btn" data-tab="categories">Categories</button>
+    <div class="header">
+      <h2>NoteCapture</h2>
+      <button id="open-docs" class="primary-btn">Open in Google Docs</button>
     </div>
 
-    <div class="tab-content" id="notes-tab">
-      <div class="search-bar">
-        <input type="text" id="search" placeholder="Search notes...">
+    <div class="main-tabs">
+      <button class="main-tab active" data-tab="notes">Notes</button>
+      <button class="main-tab" data-tab="categories">Categories</button>
+    </div>
+
+    <!-- Notes Tab -->
+    <div id="notes-content" class="tab-content active">
+      <div class="filter-tabs">
+        <button class="filter-tab active">All (0)</button>
+        <button class="filter-tab">Notes (0)</button>
+        <button class="filter-tab">Quote (0)</button>
+        <button class="filter-tab">Definition (0)</button>
+        <button class="filter-tab">Research (0)</button>
+        <button class="filter-tab">Reference (0)</button>
       </div>
+
+      <div class="time-filter">
+        <select id="time-select">
+          <option value="All Time">All Time</option>
+          <option value="Today">Today</option>
+          <option value="Yesterday">Yesterday</option>
+          <option value="Last Week">Last Week</option>
+          <option value="Last Month">Last Month</option>
+          <option value="Custom">Custom...</option>
+        </select>
+        <div id="custom-date" class="custom-date" style="display: none;">
+          <div class="date-range">
+            <div class="date-input">
+              <label for="date-picker-start">From:</label>
+              <input type="date" id="date-picker-start">
+            </div>
+            <div class="date-input">
+              <label for="date-picker-end">To:</label>
+              <input type="date" id="date-picker-end">
+            </div>
+          </div>
+          <button id="apply-date" class="primary-btn">Apply</button>
+        </div>
+        <button id="clear-all" class="danger-btn">Clear All</button>
+      </div>
+
       <div id="notes-list">
-        <!-- Notes will be populated here -->
+        <!-- Example note structure -->
+        <div class="note-item">
+          <div class="note-content">
+            From the latest gaming consoles to VR headsets and accessories, discover the ultimate gaming gifts that will make any gamer's holiday special. Including PS5, Xbox Series X, Meta Quest 3, and more.
+          </div>
+          <div class="note-meta">
+            <div class="note-source">
+              From: llamatechguide.com
+              <span>•</span>
+              Saved: 1/1/2025, 5:52:13 PM
+            </div>
+            <div class="note-category">Research</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="tab-content hidden" id="categories-tab">
-      <button id="add-category" class="btn">Add Category</button>
+    <!-- Categories Tab -->
+    <div id="categories-content" class="tab-content">
+      <div class="add-category">
+        <input type="text" id="new-category" placeholder="Add new category">
+        <button id="add-category" class="primary-btn">Add</button>
+      </div>
+
       <div id="categories-list">
         <!-- Categories will be populated here -->
       </div>
+
+      <button id="save-categories" class="primary-btn full-width">Save Changes</button>
     </div>
   </div>
   <script src="../popup.js"></script>

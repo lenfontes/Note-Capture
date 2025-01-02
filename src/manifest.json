@@ -9,7 +9,7 @@
     "identity"
   ],
   "oauth2": {
-    "client_id": "YOUR_CLIENT_ID.apps.googleusercontent.com",
+    "client_id": "454911822597-27ic2in0g0pheqds1u40qlg87h3ult4f.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/documents",
       "https://www.googleapis.com/auth/drive.file"
