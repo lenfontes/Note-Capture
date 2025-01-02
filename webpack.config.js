@@ -1,23 +1,24 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
+const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default {
-  entry: {},
+module.exports = {
+  entry: {
+    background: './src/js/background.js',
+    popup: './src/js/popup.js',
+    'google-api': './src/js/google-api.js'
+  },
   output: {
     path: path.resolve(__dirname, 'extension-dist'),
-    clean: true
+    filename: '[name].js',
   },
   plugins: [
-    new CopyWebpackPlugin({
+    new CopyPlugin({
       patterns: [
-        { from: 'src/manifest.json', to: 'manifest.json' },
-        { from: 'src/js/background.js', to: 'background.js' },
-        { from: 'src/icons/*', to: 'icons/[name][ext]' }
-      ]
-    })
-  ]
+        { from: './src/manifest.json', to: 'manifest.json' },
+        { from: './src/pages', to: 'pages' },
+        { from: './src/icons', to: 'icons' },
+        { from: './src/styles', to: 'styles' }
+      ],
+    }),
+  ],
 };

@@ -2,21 +2,33 @@
 <html>
 <head>
   <title>NoteCapture</title>
-  <style>
-    body {
-      width: 300px;
-      padding: 10px;
-    }
-    #lastNote {
-      margin-top: 10px;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-  </style>
+  <link rel="stylesheet" href="../styles/popup.css">
 </head>
 <body>
-  <h3>Last Captured Note</h3>
-  <div id="lastNote"></div>
-  <script src="popup.js"></script>
+  <div class="container">
+    <h2>NoteCapture</h2>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="notes">Notes</button>
+      <button class="tab-btn" data-tab="categories">Categories</button>
+    </div>
+
+    <div class="tab-content" id="notes-tab">
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="Search notes...">
+      </div>
+      <div id="notes-list">
+        <!-- Notes will be populated here -->
+      </div>
+    </div>
+
+    <div class="tab-content hidden" id="categories-tab">
+      <button id="add-category" class="btn">Add Category</button>
+      <div id="categories-list">
+        <!-- Categories will be populated here -->
+      </div>
+    </div>
+  </div>
+  <script src="../popup.js"></script>
 </body>
 </html>
