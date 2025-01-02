@@ -4,19 +4,20 @@ A powerful Chrome extension that allows you to save and organize highlighted tex
 
 ## Features
 
-- **Note Capture**
-  - Save highlighted text from any webpage with right-click
-  - Automatically preserves source URL and timestamp
-  - Rich text formatting support
+- **Quick Capture**
+  - Save highlighted text from any webpage via right-click menu
+  - Automatic sync with Google Docs
+  - Preserves source URLs and timestamps
 
 - **Note Formatting**
   - Categories displayed in blue and bold
   - Source URLs as clickable links
   - Timestamps and metadata in elegant grey italic
   - Clear visual hierarchy for better readability
+  - Customizable link display options
 
 - **Organization**
-  - Customizable categories for better note organization
+  - Predefined and customizable categories
   - Drag-and-drop category reordering
   - Quick category filtering
   - Enhanced date filtering:
@@ -31,21 +32,24 @@ A powerful Chrome extension that allows you to save and organize highlighted tex
     - Blue, bold categories
     - Clickable source URLs
     - Grey, italic metadata
+  - Manual sync option for offline use
   - Changes sync both ways
 
 - **User Interface**
   - Modern, clean interface
+  - Easy note management (view, edit, delete)
   - Swipe-to-delete on touch devices
   - Delete button on desktop
-  - Interactive tutorial for new users
+  - Interactive first-time user tutorial
   - Compact, user-friendly dialogs
   - Responsive design that works on any screen size
 
 - **Search & Filter**
   - Full-text search through notes
   - Filter by category
-  - Date range filtering
-  - Source URL filtering
+  - Filter by date range
+  - Filter by source URL
+  - Quick access to all saved notes
 
 ## Installation
 
@@ -59,40 +63,24 @@ A powerful Chrome extension that allows you to save and organize highlighted tex
 1. Create a Google Cloud Project and enable the Google Docs API
 2. Create OAuth 2.0 credentials and replace the `${CLIENT_ID}` in manifest.json with your client ID
 3. Install the extension in Chrome
-4. On first launch, authorize the extension to access Google Docs
+4. On first launch:
+   - Authorize the extension to access Google Docs
+   - Complete the interactive tutorial
+   - Start capturing and organizing your notes!
 
-## Usage
+## Performance
 
-### Saving Notes
-1. Highlight any text on a webpage
-2. Right-click and select "Save to NoteCapture"
-3. The note is automatically saved with source URL and timestamp
-4. Choose a category for better organization
+- Minimal impact on browser performance
+- Efficient data syncing with Google Docs
+- Follows Google's API usage guidelines
+- Compatible with latest Chrome versions
 
-### Managing Notes
-1. Click the extension icon to open the notes panel
-2. View all notes organized by category
-3. Use the date filter to find recent notes
-4. Search through notes using the search bar
-5. Delete notes by:
-   - Swiping left on touch devices
-   - Clicking the delete button on desktop
+## Future Enhancements
 
-### Categories
-1. Click the "Categories" tab to manage categories
-2. Add new categories with the "+" button
-3. Drag to reorder categories
-4. Remove categories (notes will be marked as "Uncategorized")
-
-### Google Docs Sync
-- Notes are automatically synced to a dedicated Google Doc
-- Each note includes:
-  - The captured text
-  - Source URL
-  - Timestamp
-  - Category
-- Changes made in the extension sync to Google Docs
-- Deleting notes or categories updates both places
+- Export notes to additional formats (PDF, Markdown)
+- Cross-browser compatibility (Firefox, Edge)
+- AI-powered categorization
+- Enhanced search capabilities
 
 ## Development
 
