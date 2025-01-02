@@ -9,16 +9,28 @@ A powerful Chrome extension that allows you to save and organize highlighted tex
   - Automatically preserves source URL and timestamp
   - Rich text formatting support
 
+- **Note Formatting**
+  - Categories displayed in blue and bold
+  - Source URLs as clickable links
+  - Timestamps and metadata in elegant grey italic
+  - Clear visual hierarchy for better readability
+
 - **Organization**
   - Customizable categories for better note organization
   - Drag-and-drop category reordering
   - Quick category filtering
-  - Date-based filtering (Today, Last 7 Days, Last 30 Days, All Time)
+  - Enhanced date filtering:
+    - Preset filters (Today, Yesterday, Last Week, Last Month)
+    - Custom date range picker
+    - Timezone-aware date handling
 
 - **Google Docs Integration**
   - Seamless sync with Google Docs
   - Automatic document creation and organization
-  - Categories and metadata preserved in Google Docs
+  - Rich text formatting in Google Docs:
+    - Blue, bold categories
+    - Clickable source URLs
+    - Grey, italic metadata
   - Changes sync both ways
 
 - **User Interface**
