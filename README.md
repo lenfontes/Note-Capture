@@ -38,7 +38,7 @@ A powerful Chrome extension that allows you to save and organize highlighted tex
   - Swipe-to-delete on touch devices
   - Delete button on desktop
   - Interactive tutorial for new users
-  - Status notifications for actions
+  - Compact, user-friendly dialogs
   - Responsive design that works on any screen size
 
 - **Search & Filter**
