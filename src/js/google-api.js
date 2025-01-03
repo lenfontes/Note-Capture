@@ -175,11 +175,15 @@ class GoogleAPIClient {
                   rgbColor: { blue: 0.5, red: 0.5, green: 0.5 }
                 }
               },
+              fontSize: {
+                magnitude: 9, 
+                unit: 'PT'
+              },
               link: {
                 url: source
               }
             },
-            fields: 'bold,italic,foregroundColor,link'
+            fields: 'bold,italic,foregroundColor,fontSize,link'
           }
         }
       );
@@ -206,9 +210,13 @@ class GoogleAPIClient {
                 color: {
                   rgbColor: { blue: 0.5, red: 0.5, green: 0.5 }
                 }
-              }
+              },
+              fontSize: {
+                magnitude: 9, 
+                unit: 'PT'
+              },
             },
-            fields: 'bold,italic,foregroundColor'
+            fields: 'bold,italic,foregroundColor,fontSize'
           }
         }
       );
