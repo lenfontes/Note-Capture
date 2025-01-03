@@ -93,7 +93,7 @@ class GoogleAPIClient {
         // Add category in blue and bold
         {
           insertText: {
-            location: { index: 1 },
+            location: { index: category.length + 3 },
             text: `[${category}]\n\n`
           }
         },
@@ -101,41 +101,88 @@ class GoogleAPIClient {
           updateTextStyle: {
             range: {
               startIndex: 1,
-              endIndex: category.length + 3
+              endIndex: category.length + 3 // +3 for the brackets and newline
             },
             textStyle: {
+              bold: true,
               foregroundColor: {
                 color: {
                   rgbColor: {
                     blue: 1,
-                    green: 0.4,
-                    red: 0
+                    red: 0,
+                    green: 0
                   }
                 }
-              },
-              bold: true
+              }
             },
-            fields: 'foregroundColor,bold'
+            fields: 'bold,foregroundColor'
           }
         },
-        // Add main text in black (default color)
+        // Add note text in black
         {
           insertText: {
             location: { index: category.length + 3 },
             text: `${text}\n\n`
           }
         },
-        // Add source with link and grey color, italic
+        {
+          updateTextStyle: {
+            range: {
+              startIndex: category.length + 3,
+              endIndex: category.length + text.length + 4 // +4 for the previous newline and current newline
+            },
+            textStyle: {
+              foregroundColor: {
+                color: {
+                  rgbColor: {
+                    blue: 0,
+                    red: 0,
+                    green: 0
+                  }
+                }
+              }
+            },
+            fields: 'foregroundColor'
+          }
+        },
+        // Add source with URL in grey
         {
           insertText: {
-            location: { index: category.length + text.length + 5 },
-            text: `Source: ${source}\n`
+            location: { index: category.length + text.length + 4 },
+            text: `Source: `
           }
         },
         {
           updateTextStyle: {
             range: {
-              startIndex: category.length + text.length + 5,
+              startIndex: category.length + text.length + 4,
+              endIndex: category.length + text.length + 12 // "Source: " length is 8
+            },
+            textStyle: {
+              foregroundColor: {
+                color: {
+                  rgbColor: {
+                    blue: 0.5,
+                    red: 0.5,
+                    green: 0.5
+                  }
+                }
+              }
+            },
+            fields: 'foregroundColor'
+          }
+        },
+        // Add the URL as a link in grey
+        {
+          insertText: {
+            location: { index: category.length + text.length + 12 },
+            text: `${source}\n`
+          }
+        },
+        {
+          updateTextStyle: {
+            range: {
+              startIndex: category.length + text.length + 12,
               endIndex: category.length + text.length + source.length + 13
             },
             textStyle: {
@@ -143,58 +190,50 @@ class GoogleAPIClient {
                 color: {
                   rgbColor: {
                     blue: 0.5,
-                    green: 0.5,
-                    red: 0.5
+                    red: 0.5,
+                    green: 0.5
                   }
                 }
               },
-              italic: true,
-              fontSize: { magnitude: 9, unit: 'PT' }
+              link: {
+                url: source
+              }
             },
-            fields: 'foregroundColor,italic,fontSize'
+            fields: 'foregroundColor,link'
           }
         },
-        // Make source URL clickable
-        {
-          updateTextStyle: {
-            range: {
-              startIndex: category.length + text.length + 13,
-              endIndex: category.length + text.length + 13 + source.length
-            },
-            textStyle: {
-              link: { url: source },
-              fontSize: { magnitude: 9, unit: 'PT' }
-            },
-            fields: 'link,fontSize'
-          }
-        },
-        // Add timestamp in grey and italic
+        // Add captured timestamp in grey
         {
           insertText: {
-            location: { index: category.length + text.length + source.length + 14 },
-            text: `Captured: ${timestamp}\n\n---------------\n\n`
+            location: { index: category.length + text.length + source.length + 13 },
+            text: `Captured: ${timestamp}\n\n`
           }
         },
         {
           updateTextStyle: {
             range: {
-              startIndex: category.length + text.length + source.length + 14,
-              endIndex: category.length + text.length + source.length + timestamp.length + 24
+              startIndex: category.length + text.length + source.length + 13,
+              endIndex: category.length + text.length + source.length + timestamp.length + 24 // +24 for "Captured: " and newlines
             },
             textStyle: {
               foregroundColor: {
                 color: {
                   rgbColor: {
                     blue: 0.5,
-                    green: 0.5,
-                    red: 0.5
+                    red: 0.5,
+                    green: 0.5
                   }
                 }
-              },
-              italic: true,
-              fontSize: { magnitude: 9, unit: 'PT' }
+              }
             },
-            fields: 'foregroundColor,italic,fontSize'
+            fields: 'foregroundColor'
+          }
+        },
+        // Add separator
+        {
+          insertText: {
+            location: { index: category.length + text.length + source.length + timestamp.length + 24 },
+            text: '-----------------------------------------------\n\n'
           }
         }
       ];

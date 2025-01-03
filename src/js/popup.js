@@ -235,41 +235,65 @@ class PopupManager {
   }
 
   displayCategories() {
-    const list = document.getElementById('categories-list');
-    list.innerHTML = '';
-
+    const categoriesContainer = document.getElementById('categories-list');
+    categoriesContainer.innerHTML = '';
+    
     this.categories.forEach((category, index) => {
-      const item = document.createElement('div');
-      item.className = 'category-item';
-      item.draggable = true;
-      item.innerHTML = `
-        <span class="category-drag">...</span>
-        <span class="category-name">${category}</span>
-        <button class="remove-category">Remove</button>
-      `;
-
-      // Add drag and drop event listeners
-      item.addEventListener('dragstart', () => {
-        item.classList.add('dragging');
+      const categoryItem = document.createElement('div');
+      categoryItem.className = 'category-item';
+      categoryItem.draggable = true;
+      categoryItem.dataset.index = index;
+      
+      const dragHandle = document.createElement('span');
+      dragHandle.className = 'material-symbols-outlined drag-handle';
+      dragHandle.textContent = 'drag_indicator';
+      
+      const categoryName = document.createElement('span');
+      categoryName.className = 'category-name';
+      categoryName.textContent = category;
+      
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'material-icons remove-btn';
+      removeBtn.textContent = 'close';
+      removeBtn.title = 'Remove category';
+      
+      categoryItem.appendChild(dragHandle);
+      categoryItem.appendChild(categoryName);
+      categoryItem.appendChild(removeBtn);
+      
+      // Add event listeners for drag and drop
+      categoryItem.addEventListener('dragstart', (e) => {
+        categoryItem.classList.add('dragging');
         this.dragSource = index;
       });
-
-      item.addEventListener('dragend', () => {
-        item.classList.remove('dragging');
-        // Update categories array based on new DOM order
-        const items = [...list.querySelectorAll('.category-item')];
-        this.categories = items.map(item => 
-          item.querySelector('.category-name').textContent
-        );
-        this.hasUnsavedChanges = true;
+      
+      categoryItem.addEventListener('dragend', () => {
+        categoryItem.classList.remove('dragging');
+        this.dragSource = null;
       });
-
-      // Add remove event listener
-      item.querySelector('.remove-category').addEventListener('click', () => {
-        this.removeCategory(index);
+      
+      categoryItem.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const draggingItem = document.querySelector('.dragging');
+        if (draggingItem && draggingItem !== categoryItem) {
+          const rect = categoryItem.getBoundingClientRect();
+          const offset = e.clientY - rect.top - rect.height / 2;
+          if (offset < 0 && categoryItem.previousElementSibling !== draggingItem) {
+            categoriesContainer.insertBefore(draggingItem, categoryItem);
+          } else if (offset > 0 && categoryItem.nextElementSibling !== draggingItem) {
+            categoriesContainer.insertBefore(draggingItem, categoryItem.nextElementSibling);
+          }
+        }
       });
-
-      list.appendChild(item);
+      
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.categories.splice(index, 1);
+        this.saveData();
+        this.displayCategories();
+      });
+      
+      categoriesContainer.appendChild(categoryItem);
     });
   }
 
@@ -279,19 +303,13 @@ class PopupManager {
     
     if (category && !this.categories.includes(category)) {
       this.categories.push(category);
-      this.hasUnsavedChanges = true;
+      this.saveData();
       this.displayCategories();
       input.value = '';
     }
   }
 
-  removeCategory(index) {
-    this.categories.splice(index, 1);
-    this.hasUnsavedChanges = true;
-    this.displayCategories();
-  }
-
-  async saveCategories() {
+  async saveData() {
     try {
       await chrome.storage.local.set({ categories: this.categories });
       this.hasUnsavedChanges = false;

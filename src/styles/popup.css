@@ -94,16 +94,53 @@ h2 {
   display: flex;
   align-items: center;
   padding: 8px;
-  border: 1px solid #dadce0;
+  margin: 4px 0;
+  background-color: #f8f9fa;
   border-radius: 4px;
-  margin-bottom: 8px;
-  background: white;
   cursor: move;
 }
 
-.category-item.dragging {
+.category-item .drag-handle {
+  color: #5f6368;
+  margin-right: 8px;
+  cursor: move;
+  user-select: none;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.category-item:hover .drag-handle {
+  color: #1a73e8;
+}
+
+.category-item .category-name {
+  flex-grow: 1;
+  margin: 0 8px;
+}
+
+.category-item .remove-btn {
+  opacity: 0;
+  transition: opacity 0.2s;
+  background: none;
+  border: none;
+  color: #5f6368;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.category-item:hover .remove-btn {
+  opacity: 1;
+}
+
+.category-item .remove-btn:hover {
+  color: #d93025;
+}
+
+.dragging {
   opacity: 0.5;
-  border: 2px dashed #1a73e8;
 }
 
 .category-drag {
@@ -121,12 +158,6 @@ h2 {
 
 .dragging .category-drag {
   cursor: grabbing;
-}
-
-.category-name {
-  flex: 1;
-  margin: 0 8px;
-  user-select: none;
 }
 
 .remove-category {
