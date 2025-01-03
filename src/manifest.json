@@ -1,12 +1,16 @@
 {
   "manifest_version": 3,
   "name": "NoteCapture",
-  "version": "1.0",
+  "version": "1.0.2",
   "description": "Save and organize highlighted text with Google Docs integration",
   "permissions": [
     "contextMenus",
     "storage",
-    "identity"
+    "identity",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://docs.googleapis.com/*"
   ],
   "oauth2": {
     "client_id": "454911822597-27ic2in0g0pheqds1u40qlg87h3ult4f.apps.googleusercontent.com",

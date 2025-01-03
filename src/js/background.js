@@ -1,10 +1,20 @@
 import googleAPI from './google-api';
 
-const CATEGORIES = ['Notes', 'Quote', 'Definition', 'Research', 'Reference'];
-
 // Create context menu items
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async () => {
   console.log('Creating context menu items');
+  
+  // Load saved categories or use defaults
+  const { categories = ['Notes', 'Quote', 'Definition', 'Research', 'Reference'] } = 
+    await chrome.storage.local.get('categories');
+  
+  createContextMenuItems(categories);
+});
+
+// Function to create context menu items
+function createContextMenuItems(categories) {
+  // Clear existing menu items
+  chrome.contextMenus.removeAll();
   
   // Create parent menu
   chrome.contextMenus.create({
@@ -14,7 +24,7 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 
   // Create category submenus
-  CATEGORIES.forEach(category => {
+  categories.forEach(category => {
     chrome.contextMenus.create({
       id: `saveNote_${category}`,
       parentId: 'saveNoteParent',
@@ -22,6 +32,14 @@ chrome.runtime.onInstalled.addListener(() => {
       contexts: ['selection']
     });
   });
+}
+
+// Listen for messages from popup to update categories
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'updateCategories' && Array.isArray(message.categories)) {
+    console.log('Updating context menu categories:', message.categories);
+    createContextMenuItems(message.categories);
+  }
 });
 
 // Handle context menu clicks

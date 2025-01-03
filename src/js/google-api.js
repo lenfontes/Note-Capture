@@ -88,20 +88,24 @@ class GoogleAPIClient {
       const source = note.source || 'Unknown source';
       const timestamp = note.timestamp ? new Date(note.timestamp).toLocaleString() : new Date().toLocaleString();
 
+      let currentIndex = 1; // Starting index for the document
+
       // Create requests array for batch update
-      const requests = [
-        // Add category in blue and bold
+      const requests = [];
+
+      // Add category in blue and bold
+      requests.push(
         {
           insertText: {
-            location: { index: category.length + 3 },
-            text: `[${category}]\n\n`
+            location: { index: currentIndex },
+            text: `[${category}]\n\n` // Properly format the category with brackets and line breaks
           }
         },
         {
           updateTextStyle: {
             range: {
-              startIndex: 1,
-              endIndex: category.length + 3 // +3 for the brackets and newline
+              startIndex: currentIndex,
+              endIndex: currentIndex + category.length + 2 // Only bold the category and brackets
             },
             textStyle: {
               bold: true,
@@ -117,126 +121,106 @@ class GoogleAPIClient {
             },
             fields: 'bold,foregroundColor'
           }
-        },
-        // Add note text in black
+        }
+      );
+      currentIndex += category.length + 3; // Update index for the next section
+
+      // Add note text in black
+      requests.push(
         {
           insertText: {
-            location: { index: category.length + 3 },
-            text: `${text}\n\n`
+            location: { index: currentIndex },
+            text: `${text}\n\n` // Ensure note text is followed by line breaks
           }
         },
         {
           updateTextStyle: {
             range: {
-              startIndex: category.length + 3,
-              endIndex: category.length + text.length + 4 // +4 for the previous newline and current newline
+              startIndex: currentIndex,
+              endIndex: currentIndex + text.length // Only style the text, not the newlines
             },
             textStyle: {
+              bold: false, 
               foregroundColor: {
                 color: {
-                  rgbColor: {
-                    blue: 0,
-                    red: 0,
-                    green: 0
-                  }
+                  rgbColor: { blue: 0, red: 0, green: 0 }
                 }
               }
             },
-            fields: 'foregroundColor'
+            fields: 'bold,foregroundColor'
           }
-        },
-        // Add source with URL in grey
+        }
+      );
+      currentIndex += text.length + 2;
+
+      // Add source with URL in grey
+      requests.push(
         {
           insertText: {
-            location: { index: category.length + text.length + 4 },
-            text: `Source: `
+            location: { index: currentIndex },
+            text: `Source: ${source}\n`
           }
         },
         {
           updateTextStyle: {
             range: {
-              startIndex: category.length + text.length + 4,
-              endIndex: category.length + text.length + 12 // "Source: " length is 8
+              startIndex: currentIndex,
+              endIndex: currentIndex + 8 + source.length // "Source: " length is 8
             },
             textStyle: {
+              bold: false,
+              italic: true,
               foregroundColor: {
                 color: {
-                  rgbColor: {
-                    blue: 0.5,
-                    red: 0.5,
-                    green: 0.5
-                  }
-                }
-              }
-            },
-            fields: 'foregroundColor'
-          }
-        },
-        // Add the URL as a link in grey
-        {
-          insertText: {
-            location: { index: category.length + text.length + 12 },
-            text: `${source}\n`
-          }
-        },
-        {
-          updateTextStyle: {
-            range: {
-              startIndex: category.length + text.length + 12,
-              endIndex: category.length + text.length + source.length + 13
-            },
-            textStyle: {
-              foregroundColor: {
-                color: {
-                  rgbColor: {
-                    blue: 0.5,
-                    red: 0.5,
-                    green: 0.5
-                  }
+                  rgbColor: { blue: 0.5, red: 0.5, green: 0.5 }
                 }
               },
               link: {
                 url: source
               }
             },
-            fields: 'foregroundColor,link'
+            fields: 'bold,italic,foregroundColor,link'
           }
-        },
-        // Add captured timestamp in grey
+        }
+      );
+      currentIndex += 8 + source.length + 1; // +1 for newline
+
+      // Add captured timestamp in grey
+      requests.push(
         {
           insertText: {
-            location: { index: category.length + text.length + source.length + 13 },
+            location: { index: currentIndex },
             text: `Captured: ${timestamp}\n\n`
           }
         },
         {
           updateTextStyle: {
             range: {
-              startIndex: category.length + text.length + source.length + 13,
-              endIndex: category.length + text.length + source.length + timestamp.length + 24 // +24 for "Captured: " and newlines
+              startIndex: currentIndex,
+              endIndex: currentIndex + 10 + timestamp.length // "Captured: " length is 10
             },
             textStyle: {
+              bold: false,
+              italic: true,
               foregroundColor: {
                 color: {
-                  rgbColor: {
-                    blue: 0.5,
-                    red: 0.5,
-                    green: 0.5
-                  }
+                  rgbColor: { blue: 0.5, red: 0.5, green: 0.5 }
                 }
               }
             },
-            fields: 'foregroundColor'
-          }
-        },
-        // Add separator
-        {
-          insertText: {
-            location: { index: category.length + text.length + source.length + timestamp.length + 24 },
-            text: '-----------------------------------------------\n\n'
+            fields: 'bold,italic,foregroundColor'
           }
         }
-      ];
+      );
+      currentIndex += 10 + timestamp.length + 2;
+
+      // Add separator
+      requests.push({
+        insertText: {
+          location: { index: currentIndex },
+          text: '-----------------------------------------------\n\n'
+        }
+      });
 
       const response = await fetch(`https://docs.googleapis.com/v1/documents/${this.notesDocId}:batchUpdate`, {
         method: 'POST',

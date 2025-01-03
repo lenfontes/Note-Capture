@@ -97,7 +97,7 @@ class PopupManager {
 
     // Categories management
     document.getElementById('add-category').addEventListener('click', () => this.addCategory());
-    document.getElementById('save-categories').addEventListener('click', () => this.saveCategories());
+    document.getElementById('save-categories').addEventListener('click', () => this.saveData());
 
     // Handle drag and drop events on the categories list
     const categoriesList = document.getElementById('categories-list');
@@ -162,17 +162,32 @@ class PopupManager {
   updateFilterCounts() {
     const filteredNotes = this.filterNotesByTime(this.notes);
     const counts = {
-      All: filteredNotes.length,
-      Notes: filteredNotes.filter(n => n.category === 'Notes').length,
-      Quote: filteredNotes.filter(n => n.category === 'Quote').length,
-      Definition: filteredNotes.filter(n => n.category === 'Definition').length,
-      Research: filteredNotes.filter(n => n.category === 'Research').length,
-      Reference: filteredNotes.filter(n => n.category === 'Reference').length
+      All: filteredNotes.length
     };
+    
+    // Count notes for each category
+    this.categories.forEach(category => {
+      counts[category] = filteredNotes.filter(n => n.category === category).length;
+    });
 
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-      const category = tab.textContent.split(' ')[0];
+    // Clear existing filter tabs
+    const filterTabs = document.querySelector('.filter-tabs');
+    filterTabs.innerHTML = '';
+
+    // Add "All" filter first
+    const allTab = document.createElement('button');
+    allTab.className = 'filter-tab' + (this.currentFilter === 'All' ? ' active' : '');
+    allTab.textContent = `All (${counts.All})`;
+    allTab.addEventListener('click', () => this.switchFilter(allTab));
+    filterTabs.appendChild(allTab);
+
+    // Add category filters in the saved order
+    this.categories.forEach(category => {
+      const tab = document.createElement('button');
+      tab.className = 'filter-tab' + (this.currentFilter === category ? ' active' : '');
       tab.textContent = `${category} (${counts[category] || 0})`;
+      tab.addEventListener('click', () => this.switchFilter(tab));
+      filterTabs.appendChild(tab);
     });
   }
 
@@ -270,6 +285,15 @@ class PopupManager {
       categoryItem.addEventListener('dragend', () => {
         categoryItem.classList.remove('dragging');
         this.dragSource = null;
+        
+        // Update categories array based on new DOM order
+        const items = [...document.querySelectorAll('.category-item')];
+        this.categories = items.map(item => 
+          item.querySelector('.category-name').textContent
+        );
+        
+        // Save the new order
+        this.saveData();
       });
       
       categoryItem.addEventListener('dragover', (e) => {
